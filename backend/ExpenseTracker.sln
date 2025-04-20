@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTracker.API", "ExpenseTracker.API\ExpenseTracker.API.csproj", "{31AE73FB-94E9-4E41-A014-74C5313DCBCB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseTracker.Model", "ExpenseTracker.Model\ExpenseTracker.Model.csproj", "{70DECF66-E540-448E-A796-465BFF6A602A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{31AE73FB-94E9-4E41-A014-74C5313DCBCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31AE73FB-94E9-4E41-A014-74C5313DCBCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31AE73FB-94E9-4E41-A014-74C5313DCBCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31AE73FB-94E9-4E41-A014-74C5313DCBCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70DECF66-E540-448E-A796-465BFF6A602A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70DECF66-E540-448E-A796-465BFF6A602A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70DECF66-E540-448E-A796-465BFF6A602A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70DECF66-E540-448E-A796-465BFF6A602A}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
