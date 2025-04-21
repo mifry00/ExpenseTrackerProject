@@ -51,4 +51,43 @@ public class ExpenseRepository : BaseRepository
 
         return expenses;
     }
+// Get all unapproved expenses (for admin)
+    public List<Expense> GetUnapprovedExpenses()
+{
+    var expenses = new List<Expense>();
+    using var conn = GetConnection();
+    using var cmd = new NpgsqlCommand("SELECT * FROM expenses WHERE is_approved = false", conn);
+    
+    conn.Open();
+    using var reader = cmd.ExecuteReader();
+    while (reader.Read())
+    {
+        expenses.Add(new Expense
+        {
+            Id = reader.GetInt32(0),
+            UserId = reader.GetInt32(1),
+            Amount = reader.GetDecimal(2),
+            Category = reader.GetString(3),
+            Description = reader.GetString(4),
+            ExpenseDate = reader.GetDateTime(5),
+            IsApproved = reader.GetBoolean(6),
+            CreatedAt = reader.GetDateTime(7)
+        });
+    }
+
+    return expenses;
+}
+
+
+    // Approve a specific expense
+    public void ApproveExpense(int id)
+    {
+        using var conn = GetConnection();
+        using var cmd = new NpgsqlCommand("UPDATE expenses SET is_approved = true WHERE id = @id", conn);
+        cmd.Parameters.AddWithValue("id", id);
+
+        conn.Open();
+        cmd.ExecuteNonQuery();
+    }
+    
 }

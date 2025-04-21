@@ -28,4 +28,20 @@ public class ExpenseController : ControllerBase
         var expenses = _expenseRepository.GetExpensesByUserId(userId);
         return Ok(expenses);
     }
+
+    // GET: /api/expense/unapproved
+[HttpGet("unapproved")]
+public IActionResult GetUnapprovedExpenses()
+{
+    var unapproved = _expenseRepository.GetUnapprovedExpenses();
+    return Ok(unapproved);
+}
+
+// PUT: /api/expense/approve/{id}
+[HttpPut("approve/{id}")]
+public IActionResult ApproveExpense(int id)
+{
+    _expenseRepository.ApproveExpense(id);
+    return Ok($"Expense {id} approved.");
+}
 }

@@ -24,4 +24,6 @@ var app = builder.Build();
 app.UseAuthorization();
 app.MapControllers();
 
+app.MapGet("/", () => "🚀 Expense Tracker API is running!");
+
 app.Run();
