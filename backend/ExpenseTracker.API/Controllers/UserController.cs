@@ -32,7 +32,7 @@ public class UserController : ControllerBase
         // Insert user
         _userRepository.InsertUser(user);
 
-        return Ok("User registered successfully.");
+        return Ok(new { message = "User registered successfully." });
     }
 
     // POST: api/user/login
