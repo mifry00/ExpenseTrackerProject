@@ -1,1 +1,16 @@
-<p>register works!</p>
+<div class="register-container">
+    <h2>Register</h2>
+    <form (ngSubmit)="register()">
+      <label>Email:</label>
+      <input type="email" [(ngModel)]="email" name="email" required />
+  
+      <label>Password:</label>
+      <input type="password" [(ngModel)]="password" name="password" required />
+  
+      <button type="submit">Register</button>
+    </form>
+  
+    <p class="error" *ngIf="error">{{ error }}</p>
+    <p class="success" *ngIf="success">{{ success }}</p>
+  </div>
+  

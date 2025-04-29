@@ -15,6 +15,8 @@ export class LoginComponent {
   email: string = '';
   password: string = '';
   error: string = '';
+  success: string = '';
+
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -28,7 +30,9 @@ export class LoginComponent {
       next: (res) => {
         localStorage.setItem('userId', res.userId);
         localStorage.setItem('isAdmin', res.isAdmin);
-        this.router.navigate([res.isAdmin ? '/admin' : '/expenses']);
+        this.router.navigate(['/dashboard']);
+        localStorage.setItem('userEmail', this.email);
+
       },
       error: () => {
         this.error = 'Login failed. Check your email and password.';
