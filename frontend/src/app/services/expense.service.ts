@@ -32,4 +32,14 @@ export class ExpenseService {
   deleteExpense(expenseId: number) {
     return this.http.delete(`${this.apiUrl}/${expenseId}`);
   }
+
+  getUnapprovedExpenses(): Observable<Expense[]> {
+    return this.http.get<Expense[]>(`${this.apiUrl}/unapproved`);
+  }
+  
+  approveExpense(expenseId: number) {
+    return this.http.put(`${this.apiUrl}/approve/${expenseId}`, {}); 
+  }
+  
+
 }
