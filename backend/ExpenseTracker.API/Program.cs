@@ -1,4 +1,4 @@
-using ExpenseTracker.Model.Repositories; // Added
+using ExpenseTracker.Model.Repositories; 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 
@@ -6,46 +6,43 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Adding services to the container.
+// Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
-// Registering repository
+// Register repositories
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<ExpenseRepository>();
 
+// Configure CORS properly
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(name: MyAllowSpecificOrigins,
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200") // Angular frontend origin
+            policy.WithOrigins("http://localhost:4200")
                   .AllowAnyHeader()
                   .AllowAnyMethod();
         });
 });
 
-
-
 var app = builder.Build();
+
+// Use CORS BEFORE authorization
+app.UseCors(MyAllowSpecificOrigins);
+
+// Swagger setup
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(); 
-    app.UseCors(MyAllowSpecificOrigins);
-
+    app.UseSwaggerUI();
 }
 
-// Enable swagger
-    app.UseSwagger();
-    app.UseSwaggerUI();
-
-// app.UseHttpsRedirection();
+// Middleware
+// app.UseHttpsRedirection(); // optional
 app.UseAuthorization();
 app.MapControllers();
-
-app.MapGet("/", () => "🚀 Expense Tracker API is running!");
+app.MapGet("/", () => "Expense Tracker API is running!");
 
 app.Run();

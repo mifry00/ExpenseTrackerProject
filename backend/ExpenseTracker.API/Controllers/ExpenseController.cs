@@ -15,33 +15,41 @@ public class ExpenseController : ControllerBase
         _expenseRepository = expenseRepository;
     }
 
-    [HttpPost]
+    // POST: api/expense/add
+    [HttpPost("add")]
     public IActionResult AddExpense([FromBody] Expense expense)
     {
-        _expenseRepository.InsertExpense(expense);
-        return Ok("Expense added successfully.");
+        if (expense == null)
+        {
+            return BadRequest("Invalid expense data.");
+        }
+
+        _expenseRepository.AddExpense(expense);  // Make sure AddExpense exists in repository
+        return Ok(new { message = "Expense added successfully." });
     }
 
-    [HttpGet("{userId}")]
-    public IActionResult GetUserExpenses(int userId)
+    // GET: api/expense/user/{userId}
+    [HttpGet("user/{userId}")]
+    public IActionResult GetExpensesByUserId(int userId)
+{
+    try
     {
         var expenses = _expenseRepository.GetExpensesByUserId(userId);
         return Ok(expenses);
     }
-
-    // GET: /api/expense/unapproved
-[HttpGet("unapproved")]
-public IActionResult GetUnapprovedExpenses()
-{
-    var unapproved = _expenseRepository.GetUnapprovedExpenses();
-    return Ok(unapproved);
+    catch (Exception ex) //temporarily!!!
+    {
+        Console.WriteLine("🚨 Error fetching expenses: " + ex.Message);
+        return StatusCode(500, "Server error: " + ex.Message);
+    }
 }
 
-// PUT: /api/expense/approve/{id}
-[HttpPut("approve/{id}")]
-public IActionResult ApproveExpense(int id)
-{
-    _expenseRepository.ApproveExpense(id);
-    return Ok($"Expense {id} approved.");
-}
+
+    // DELETE: api/expense/{expenseId}
+    [HttpDelete("{expenseId}")]
+    public IActionResult DeleteExpense(int expenseId)
+    {
+        _expenseRepository.DeleteExpense(expenseId);
+        return Ok(new { message = "Expense deleted successfully." });
+    }
 }
