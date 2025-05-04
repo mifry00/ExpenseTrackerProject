@@ -9,17 +9,11 @@ import { ExpenseService, Expense } from '../../services/expense.service';
   imports: [CommonModule, RouterModule],
   templateUrl: './expenses.component.html',
 })
-export class ExpensesComponent implements OnInit {
-  expenses: Expense[] = [];
+export class ExpensesComponent implements OnInit {expenses: Expense[] = [];
 
-  constructor(
-    private expenseService: ExpenseService,
-    private router: Router
-  ) {}
+  constructor(private expenseService: ExpenseService,private router: Router) {}
 
-  ngOnInit() {
-    this.loadExpenses();
-  }
+  ngOnInit() {this.loadExpenses();}
 
   loadExpenses() {
     const userId = Number(localStorage.getItem('userId'));
@@ -48,7 +42,9 @@ export class ExpensesComponent implements OnInit {
     }
   }
 
+  editExpense(expense: Expense) {
+    this.router.navigate(['/edit-expense', expense.id]);}
+
   goToAddExpense() {
-    this.router.navigate(['/add-expense']);
-  }
+    this.router.navigate(['/add-expense']);}
 }

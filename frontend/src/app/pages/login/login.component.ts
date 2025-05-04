@@ -30,13 +30,18 @@ export class LoginComponent {
       next: (res) => {
         localStorage.setItem('userId', res.userId);
         localStorage.setItem('isAdmin', res.isAdmin);
-        this.router.navigate(['/dashboard']);
         localStorage.setItem('userEmail', this.email);
-
+    
+        if (res.isAdmin) {
+          this.router.navigate(['/admin']);  // Go to admin dashboard
+        } else {
+          this.router.navigate(['/expenses']);  // Go to regular expenses page
+        }
       },
       error: () => {
         this.error = 'Login failed. Check your email and password.';
       }
     });
+    
   }
 }

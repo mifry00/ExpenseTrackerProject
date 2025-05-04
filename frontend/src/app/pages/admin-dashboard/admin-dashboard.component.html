@@ -7,22 +7,20 @@
       <th>Category</th>
       <th>Description</th>
       <th>Date</th>
-      <th>Actions</th>
+      <th>Action</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let expense of expenses">
-      <td>{{ expense.amount | currency }}</td>
+      <td>{{ expense.amount }}</td>
       <td>{{ expense.category }}</td>
       <td>{{ expense.description }}</td>
       <td>{{ expense.expenseDate | date }}</td>
-      <td>
-        <button (click)="approveExpense(expense.id)">Approve</button>
-      </td>
+      <td><button (click)="approveExpense(expense.id)">Approve</button></td>
     </tr>
   </tbody>
 </table>
 
 <ng-template #noExpenses>
-  <p>No expenses pending approval.</p>
+  <p>No unapproved expenses found.</p>
 </ng-template>

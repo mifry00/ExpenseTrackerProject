@@ -44,7 +44,6 @@ public class ExpenseController : ControllerBase
     }
 }
 
-
     // DELETE: api/expense/{expenseId}
     [HttpDelete("{expenseId}")]
     public IActionResult DeleteExpense(int expenseId)
@@ -52,4 +51,44 @@ public class ExpenseController : ControllerBase
         _expenseRepository.DeleteExpense(expenseId);
         return Ok(new { message = "Expense deleted successfully." });
     }
+
+    // GET: api/expense/{expenseId}
+    [HttpGet("{expenseId}")]
+    public IActionResult GetExpenseById(int expenseId)
+    {
+        var expense = _expenseRepository.GetExpenseById(expenseId);
+        if (expense == null)
+            return NotFound();
+
+        return Ok(expense);
+    }
+
+
+    // Update: api/expense/{expenseId}
+    [HttpPut("update")]
+    public IActionResult UpdateExpense([FromBody] Expense updatedExpense)
+    {
+        if (updatedExpense == null || updatedExpense.Id == 0)
+            return BadRequest("Invalid expense data.");
+
+        _expenseRepository.UpdateExpense(updatedExpense);
+        return Ok(new { message = "Expense updated successfully." });
+    }
+
+    // GET: api/expense/unapproved
+    [HttpGet("unapproved")]
+    public IActionResult GetUnapprovedExpenses()
+    {
+        var expenses = _expenseRepository.GetUnapprovedExpenses();
+        return Ok(expenses);
+    }
+
+    // PUT: approve expenses
+    [HttpPost("approve/{id}")]
+    public IActionResult ApproveExpense(int id)
+    {
+        _expenseRepository.ApproveExpense(id);
+        return Ok(new { message = "Expense approved successfully." });
+    }
+
 }

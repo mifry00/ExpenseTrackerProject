@@ -18,20 +18,24 @@ public class ExpenseRepository : BaseRepository
     cmd.Parameters.AddWithValue("userId", expense.UserId);
     cmd.Parameters.AddWithValue("amount", expense.Amount);
     cmd.Parameters.AddWithValue("category", expense.Category);
-    cmd.Parameters.AddWithValue("description", expense.Description ?? "");
     cmd.Parameters.AddWithValue("expenseDate", expense.ExpenseDate);
-    cmd.Parameters.AddWithValue("createdAt", DateTime.UtcNow); // Add the current time
+    cmd.Parameters.AddWithValue("createdAt", DateTime.UtcNow); 
+    cmd.Parameters.AddWithValue("description", expense.Description ?? "");
+
 
     conn.Open();
     cmd.ExecuteNonQuery();
 }
 
-
+// Get all  expenses by user
     public List<Expense> GetExpensesByUserId(int userId)
 {
     var expenses = new List<Expense>();
     using var conn = GetConnection();
-    using var cmd = new NpgsqlCommand("SELECT id, user_id, amount, category, description, expense_date, is_approved, created_at FROM expenses WHERE user_id = @userId", conn);
+    using var cmd = new NpgsqlCommand(@"
+    SELECT id, user_id, amount, category, expense_date, is_approved, created_at, description 
+    FROM expenses 
+    WHERE user_id = @userId", conn);   
     cmd.Parameters.AddWithValue("userId", userId);
 
     conn.Open();
@@ -43,11 +47,11 @@ public class ExpenseRepository : BaseRepository
             Id = reader.GetInt32(0),
             UserId = reader.GetInt32(1),
             Amount = reader.GetDecimal(2),
-            Category = reader.IsDBNull(3) ? "" : reader.GetString(3),
-            Description = reader.IsDBNull(4) ? null : reader.GetString(4),
-            ExpenseDate = reader.GetDateTime(5),
-            IsApproved = reader.GetBoolean(6),
-            CreatedAt = reader.GetDateTime(7)
+            Category = reader.GetString(3),
+            ExpenseDate = reader.GetDateTime(4),
+            IsApproved = reader.GetBoolean(5),
+            CreatedAt = reader.GetDateTime(6),
+            Description = reader.GetString(7)
         });
     }
 
@@ -59,8 +63,11 @@ public class ExpenseRepository : BaseRepository
 {
     var expenses = new List<Expense>();
     using var conn = GetConnection();
-    using var cmd = new NpgsqlCommand("SELECT * FROM expenses WHERE is_approved = false", conn);
-    
+    using var cmd = new NpgsqlCommand(@"
+        SELECT id, user_id, amount, category, expense_date, is_approved, created_at, description 
+        FROM expenses 
+        WHERE is_approved = false", conn);
+
     conn.Open();
     using var reader = cmd.ExecuteReader();
     while (reader.Read())
@@ -71,10 +78,10 @@ public class ExpenseRepository : BaseRepository
             UserId = reader.GetInt32(1),
             Amount = reader.GetDecimal(2),
             Category = reader.GetString(3),
-            Description = reader.GetString(4),
-            ExpenseDate = reader.GetDateTime(5),
-            IsApproved = reader.GetBoolean(6),
-            CreatedAt = reader.GetDateTime(7)
+            ExpenseDate = reader.GetDateTime(4),
+            IsApproved = reader.GetBoolean(5),
+            CreatedAt = reader.GetDateTime(6),
+            Description = reader.GetString(7)
         });
     }
 
@@ -91,6 +98,57 @@ public class ExpenseRepository : BaseRepository
     conn.Open();
     cmd.ExecuteNonQuery();
     }
+
+    public Expense GetExpenseById(int expenseId)
+    {
+    using var conn = GetConnection();
+    using var cmd = new NpgsqlCommand(@"
+        SELECT id, user_id, amount, category, expense_date, is_approved, created_at, description 
+        FROM expenses 
+        WHERE id = @id", conn);
+
+    cmd.Parameters.AddWithValue("id", expenseId);
+
+    conn.Open();
+    using var reader = cmd.ExecuteReader();
+    if (reader.Read())
+    {
+        return new Expense
+        {
+            Id = reader.GetInt32(0),
+            UserId = reader.GetInt32(1),
+            Amount = reader.GetDecimal(2),
+            Category = reader.GetString(3),
+            ExpenseDate = reader.GetDateTime(4),
+            IsApproved = reader.GetBoolean(5),
+            CreatedAt = reader.GetDateTime(6),
+            Description = reader.GetString(7)
+        };
+    }
+
+    return null!;
+    }
+
+    
+
+    // Edit/update a specific expense
+    public void UpdateExpense(Expense expense)
+{
+    using var conn = GetConnection();
+    using var cmd = new NpgsqlCommand(@"
+        UPDATE expenses 
+        SET amount = @amount, category = @category, description = @description, expense_date = @expenseDate 
+        WHERE id = @id", conn);
+
+    cmd.Parameters.AddWithValue("amount", expense.Amount);
+    cmd.Parameters.AddWithValue("category", expense.Category);
+    cmd.Parameters.AddWithValue("description", expense.Description ?? "");
+    cmd.Parameters.AddWithValue("expenseDate", expense.ExpenseDate);
+    cmd.Parameters.AddWithValue("id", expense.Id);
+
+    conn.Open();
+    cmd.ExecuteNonQuery();
+}
 
     // Approve a specific expense
     public void ApproveExpense(int id)

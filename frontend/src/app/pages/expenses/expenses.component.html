@@ -22,6 +22,7 @@
       <td>{{ expense.isApproved ? '✅' : '❌' }}</td>
       <td>
         <button *ngIf="expense.id !== undefined" (click)="deleteExpense(expense.id)">Delete</button>
+        <button (click)="editExpense(expense)">Edit</button>
     </td> 
     </tr>
   </tbody>
