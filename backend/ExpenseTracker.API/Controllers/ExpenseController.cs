@@ -64,7 +64,7 @@ public class ExpenseController : ControllerBase
     }
 
 
-    // Update: api/expense/{expenseId}
+    // Put: api/expense/{expenseId}
     [HttpPut("update")]
     public IActionResult UpdateExpense([FromBody] Expense updatedExpense)
     {
@@ -83,7 +83,7 @@ public class ExpenseController : ControllerBase
         return Ok(expenses);
     }
 
-    // PUT: approve expenses
+    // Post: approve expenses
     [HttpPost("approve/{id}")]
     public IActionResult ApproveExpense(int id)
     {

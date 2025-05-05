@@ -20,6 +20,7 @@ export class AdminDashboardComponent implements OnInit {
   loadUnapprovedExpenses() {
     this.expenseService.getUnapprovedExpenses().subscribe({
       next: (data) => {
+        console.log('Received expenses:', data);  
         this.expenses = data;
       },
       error: (err) => {

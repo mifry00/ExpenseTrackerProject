@@ -19,6 +19,8 @@ public class UserController : ControllerBase
     [HttpPost("register")]
     public IActionResult Register([FromBody] User user)
     {
+        Console.WriteLine($"🚀 REGISTERING USER: email={user.Email}, passwordHash={user.PasswordHash}");
+
         // Check if email already exists
         var existingUser = _userRepository.GetUserByEmail(user.Email);
         if (existingUser != null)
@@ -26,10 +28,6 @@ public class UserController : ControllerBase
             return Conflict("User already exists.");
         }
 
-        // Hash password (in a real app, use BCrypt or similar!)
-        user.PasswordHash = user.PasswordHash; // no hash for now (simplified)
-
-        // Insert user
         _userRepository.InsertUser(user);
 
         return Ok(new { message = "User registered successfully." });
@@ -39,6 +37,8 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public IActionResult Login([FromBody] User loginUser)
     {
+        Console.WriteLine($"🔑 LOGIN attempt for {loginUser.Email} with passwordHash={loginUser.PasswordHash}");
+
         var user = _userRepository.GetUserByEmail(loginUser.Email);
         if (user == null)
         {

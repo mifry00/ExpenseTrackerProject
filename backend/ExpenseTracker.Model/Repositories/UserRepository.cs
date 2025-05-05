@@ -36,10 +36,10 @@ public class UserRepository : BaseRepository
     {
         using var conn = GetConnection();
         using var cmd = new NpgsqlCommand(
-            "INSERT INTO users (email, password_hash, is_admin) VALUES (@email, @password, @isAdmin)", conn
-        );
+            "INSERT INTO users (email, password_hash, is_admin) VALUES (@email, @PasswordHash, @isAdmin)", conn);
+        
         cmd.Parameters.AddWithValue("email", user.Email);
-        cmd.Parameters.AddWithValue("password", user.PasswordHash);
+        cmd.Parameters.AddWithValue("passwordHash", user.PasswordHash);
         cmd.Parameters.AddWithValue("isAdmin", user.IsAdmin);
 
         conn.Open();

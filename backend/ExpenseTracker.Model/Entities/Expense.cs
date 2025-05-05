@@ -1,3 +1,5 @@
+namespace ExpenseTracker.Model.Entities;
+
 public class Expense
 {
     public int Id { get; set; }

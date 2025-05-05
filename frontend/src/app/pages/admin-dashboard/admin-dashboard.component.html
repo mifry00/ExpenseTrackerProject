@@ -12,7 +12,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let expense of expenses">
-      <td>{{ expense.amount }}</td>
+      <td>{{ expense.amount | currency:'DKK':'symbol' }}</td>
       <td>{{ expense.category }}</td>
       <td>{{ expense.description }}</td>
       <td>{{ expense.expenseDate | date }}</td>
