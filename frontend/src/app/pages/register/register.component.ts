@@ -24,6 +24,8 @@ export class RegisterComponent {
       passwordHash: this.password
     };
   
+    console.log('🚨 Payload being sent:', payload);
+  
     this.http.post('http://localhost:5068/api/user/register', payload).subscribe({
       next: (response) => {
         console.log('Registration successful!', response);
@@ -37,4 +39,23 @@ export class RegisterComponent {
       }
     });
   }
+  /* register() {
+    const payload = {
+      email: this.email,
+      passwordHash: this.password
+    };
+  
+    this.http.post('http://localhost:5068/api/user/register', payload).subscribe({
+      next: (response) => {
+        console.log('Registration successful!', response);
+        this.success = 'Registration successful! Please log in.';
+        this.error = null;
+      },
+      error: (err) => {
+        console.error('Registration error:', err);
+        this.success = null;
+        this.error = 'Registration failed. Please try again.';
+      }
+    });
+  }*/
 }
