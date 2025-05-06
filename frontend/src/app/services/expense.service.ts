@@ -8,7 +8,7 @@ export interface Expense {
   amount: number;
   category: string;
   description: string;
-  expenseDate: string;  // ISO format: 'YYYY-MM-DD'
+  expenseDate: string;  // format: 'YYYY-MM-DD'
   isApproved?: boolean;
   createdAt?: string;
 }
