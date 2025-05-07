@@ -1,12 +1,37 @@
-<h2>Add New Expense</h2>
+<div class="add-expense">
+  <h2>Add New Expense</h2>
 
-<form (ngSubmit)="submitExpense()">
-  <input type="number" [(ngModel)]="amount" name="amount" placeholder="Amount" required /><br />
-  <input type="text" [(ngModel)]="category" name="category" placeholder="Category" required /><br />
-  <input type="text" [(ngModel)]="description" name="description" placeholder="Description" required /><br />
-  <input type="date" [(ngModel)]="expenseDate" name="expenseDate" required /><br />
+  <form (ngSubmit)="submitExpense()">
+    <input 
+      type="number" 
+      [(ngModel)]="amount" 
+      name="amount" 
+      placeholder="Amount" 
+      required 
+    />
+    <input 
+      type="text" 
+      [(ngModel)]="category" 
+      name="category" 
+      placeholder="Category" 
+      required 
+    />
+    <input 
+      type="text" 
+      [(ngModel)]="description" 
+      name="description" 
+      placeholder="Description" 
+      required 
+    />
+    <input 
+      type="date" 
+      [(ngModel)]="expenseDate" 
+      name="expenseDate" 
+      required 
+    />
 
-  <button type="submit">Add Expense</button>
-</form>
+    <button type="submit">Add Expense</button>
+  </form>
 
-<p style="color: green">{{ message }}</p>
+  <p class="message" *ngIf="message">{{ message }}</p>
+</div>

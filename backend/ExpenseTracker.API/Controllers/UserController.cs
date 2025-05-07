@@ -19,7 +19,7 @@ public class UserController : ControllerBase
     [HttpPost("register")]
     public IActionResult Register([FromBody] User user)
     {
-        Console.WriteLine($"🚀 REGISTERING USER: email={user.Email}, passwordHash={user.PasswordHash}");
+        Console.WriteLine($"REGISTERING USER: email={user.Email}, passwordHash={user.PasswordHash}");
 
         // Check if email already exists
         var existingUser = _userRepository.GetUserByEmail(user.Email);
@@ -37,7 +37,7 @@ public class UserController : ControllerBase
     [HttpPost("login")]
     public IActionResult Login([FromBody] User loginUser)
     {
-        Console.WriteLine($"🔑 LOGIN attempt for {loginUser.Email} with passwordHash={loginUser.PasswordHash}");
+        Console.WriteLine($"LOGIN attempt for {loginUser.Email} with passwordHash={loginUser.PasswordHash}");
 
         var user = _userRepository.GetUserByEmail(loginUser.Email);
         if (user == null)

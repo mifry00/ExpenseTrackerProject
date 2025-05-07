@@ -8,7 +8,7 @@
         <input type="password" [(ngModel)]="password" placeholder="Password" name="password" required />
         <button type="submit">Login</button>
       </form>
-      <p *ngIf="error" style="color:red">{{ error }}</p>
+      <p *ngIf="error" class="error">{{ error }}</p>
       <p>Don't have an account? <a href="#" (click)="toggleMode()">Register</a></p>
     </div>
   
@@ -19,7 +19,7 @@
         <input type="password" [(ngModel)]="password" placeholder="Password" name="password" required />
         <button type="submit">Register</button>
       </form>
-      <p *ngIf="error" style="color:red">{{ error }}</p>
+      <p *ngIf="error" class="error">{{ error }}</p>
       <p>Already have an account? <a href="#" (click)="toggleMode()">Login</a></p>
     </div>
   </div>

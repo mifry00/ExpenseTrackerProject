@@ -31,18 +31,18 @@ public class ExpenseController : ControllerBase
     // GET: api/expense/user/{userId}
     [HttpGet("user/{userId}")]
     public IActionResult GetExpensesByUserId(int userId)
-{
-    try
     {
-        var expenses = _expenseRepository.GetExpensesByUserId(userId);
-        return Ok(expenses);
+        try
+        {
+            var expenses = _expenseRepository.GetExpensesByUserId(userId);
+            return Ok(expenses);
+        }
+        catch (Exception ex) /* Handle database or repository errors */
+        {
+            Console.WriteLine("Error fetching expenses: " + ex.Message);
+            return StatusCode(500, "Server error: " + ex.Message);
+        }
     }
-    catch (Exception ex) //temporarily!!!
-    {
-        Console.WriteLine("🚨 Error fetching expenses: " + ex.Message);
-        return StatusCode(500, "Server error: " + ex.Message);
-    }
-}
 
     // DELETE: api/expense/{expenseId}
     [HttpDelete("{expenseId}")]
@@ -64,7 +64,7 @@ public class ExpenseController : ControllerBase
     }
 
 
-    // Put: api/expense/{expenseId}
+    // PUT: api/expense/{expenseId}
     [HttpPut("update")]
     public IActionResult UpdateExpense([FromBody] Expense updatedExpense)
     {
@@ -83,7 +83,7 @@ public class ExpenseController : ControllerBase
         return Ok(expenses);
     }
 
-    // Post: approve expenses
+    // POST: approve expenses
     [HttpPost("approve/{id}")]
     public IActionResult ApproveExpense(int id)
     {
@@ -91,4 +91,24 @@ public class ExpenseController : ControllerBase
         return Ok(new { message = "Expense approved successfully." });
     }
 
+    // GET: api/expense/approved
+    [HttpGet("approved")]
+    public IActionResult GetApprovedExpenses()
+    {
+        var expenses = _expenseRepository.GetApprovedExpenses();
+        Console.WriteLine($"Retrieved {expenses.Count} approved expenses");
+        foreach (var expense in expenses)
+        {
+            Console.WriteLine($"Expense {expense.Id}: isApproved = {expense.IsApproved}");
+        }
+        return Ok(expenses);
+    }
+
+    // POST: api/expense/unapprove/{id}
+    [HttpPost("unapprove/{id}")]
+    public IActionResult UnapproveExpense(int id)
+    {
+        _expenseRepository.UnapproveExpense(id);
+        return Ok(new { message = "Expense unapproved successfully." });
+    }
 }

@@ -1,99 +1,41 @@
-.register-container {
-    max-width: 400px;
-    margin: 100px auto;
-    padding: 2rem;
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    background-color: #fdfdfd;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    font-family: 'Segoe UI', sans-serif;
-  }
-  
-  h2 {
-    text-align: center;
-    color: #333;
-  }
-  
-  input {
-    width: 100%;
-    padding: 0.75rem;
-    margin: 0.5rem 0 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-  }
-  
-  button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #ff00eaa8;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-  
-  button:hover {
-    background-color: #d703d7de;
-  }
-  
-  .error {
-    color: red;
-    margin-top: 0.5rem;
-  }
-  
-  .success {
-    color: green;
-    margin-top: 0.5rem;
-  }
+/* Reset default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-  .login-container {
-    max-width: 400px;
-    margin: 100px auto;
-    padding: 2rem;
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    background-color: #fdfdfd;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    font-family: 'Segoe UI', sans-serif;
-  }
-  
-  h2 {
-    text-align: center;
-    color: #333;
-  }
-  
-  input {
-    width: 100%;
-    padding: 0.75rem;
-    margin: 0.5rem 0 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 1rem;
-  }
-  
-  button {
-    width: 100%;
-    padding: 0.75rem;
-    background-color: #ff00eaa8;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 1rem;
-  }
-  
-  button:hover {
-    background-color: #d703d7de;
-  }
-  
-  .error {
-    color: red;
-    margin-top: 0.5rem;
-  }
-  
-  .success {
-    color: green;
-    margin-top: 0.5rem;
-  }
+/* Global styles */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  color: #2c3e50;
+  background-color: #f8f9fa;
+}
+
+/* Global button reset */
+button {
+  font-family: inherit;
+}
+
+/* Global link styles */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Global form element reset */
+input, button, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Remove default focus outline and add custom one */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid #4CAF50;
+  outline-offset: 2px;
+}

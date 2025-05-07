@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './landing.component.html',
+  styleUrls: ['./landing.component.css']
 })
 export class LandingComponent {
   isLoginMode: boolean = true; // login or register view
@@ -50,7 +51,7 @@ export class LandingComponent {
   register() {
     const payload = {
       email: this.email,
-      password: this.password,
+      passwordHash: this.password,
     };
 
     this.http.post<any>('http://localhost:5068/api/user/register', payload).subscribe({

@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms'; // Correct spelling
   standalone: true,
   imports: [CommonModule, FormsModule],  // Correct spelling above
   templateUrl: './edit-expense.component.html',
+  styleUrls: ['./edit-expense.component.css']
 })
 export class EditExpenseComponent implements OnInit {
   expenseId: number | null = null;

@@ -44,9 +44,16 @@ export class ExpenseService {
   getUnapprovedExpenses(): Observable<Expense[]> {
     return this.http.get<Expense[]>(`${this.apiUrl}/unapproved`);
   }
+
+  getApprovedExpenses(): Observable<Expense[]> {
+    return this.http.get<Expense[]>(`${this.apiUrl}/approved`);
+  }
   
   approveExpense(expenseId: number) {
     return this.http.post(`${this.apiUrl}/approve/${expenseId}`, null);
-  }   
+  }
 
+  unapproveExpense(expenseId: number) {
+    return this.http.post(`${this.apiUrl}/unapprove/${expenseId}`, null);
+  }
 }

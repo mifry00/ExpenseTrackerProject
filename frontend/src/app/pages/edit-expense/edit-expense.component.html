@@ -1,8 +1,32 @@
-<h2>Edit Expense</h2>
-<form (ngSubmit)="updateExpense()">
-  <input type="number" [(ngModel)]="expense.amount" name="amount" required /><br/>
-  <input type="text" [(ngModel)]="expense.category" name="category" required /><br/>
-  <input type="text" [(ngModel)]="expense.description" name="description" /><br/>
-  <input type="date" [(ngModel)]="expense.expenseDate" name="expenseDate" required /><br/>
-  <button type="submit">Update Expense</button>
-</form>
+<div class="edit-expense">
+  <h2>Edit Expense</h2>
+  <form (ngSubmit)="updateExpense()">
+    <input 
+      type="number" 
+      [(ngModel)]="expense.amount" 
+      name="amount" 
+      placeholder="Amount"
+      required 
+    />
+    <input 
+      type="text" 
+      [(ngModel)]="expense.category" 
+      name="category" 
+      placeholder="Category"
+      required 
+    />
+    <input 
+      type="text" 
+      [(ngModel)]="expense.description" 
+      name="description" 
+      placeholder="Description"
+    />
+    <input 
+      type="date" 
+      [(ngModel)]="expense.expenseDate" 
+      name="expenseDate" 
+      required 
+    />
+    <button type="submit">Update Expense</button>
+  </form>
+</div>

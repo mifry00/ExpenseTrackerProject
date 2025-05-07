@@ -1,26 +1,58 @@
-<h2>Expenses Pending Approval</h2>
+<div class="admin-dashboard">
+  <h2>{{ showApproved ? 'Approved Expenses' : 'Pending Approval Expenses' }}</h2>
+  
+  <button class="toggle-btn" (click)="toggleView()">
+    Show {{ showApproved ? 'Pending' : 'Approved' }} Expenses
+  </button>
 
-<table *ngIf="expenses.length > 0; else noExpenses">
-  <thead>
-    <tr>
-      <th>Amount</th>
-      <th>Category</th>
-      <th>Description</th>
-      <th>Date</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let expense of expenses">
-      <td>{{ expense.amount | currency:'DKK':'symbol' }}</td>
-      <td>{{ expense.category }}</td>
-      <td>{{ expense.description }}</td>
-      <td>{{ expense.expenseDate | date }}</td>
-      <td><button (click)="approveExpense(expense.id)">Approve</button></td>
-    </tr>
-  </tbody>
-</table>
+  <!-- Debug info -->
+  <div style="margin: 10px 0; padding: 10px; background: #f5f5f5;">
+    <p>Number of expenses: {{ expenses.length }}</p>
+  </div>
 
-<ng-template #noExpenses>
-  <p>No unapproved expenses found.</p>
-</ng-template>
+  <table *ngIf="expenses.length > 0; else noExpenses">
+    <thead>
+      <tr>
+        <th>Amount</th>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let expense of expenses">
+        <td>{{ expense.amount | currency:'DKK':'symbol' }}</td>
+        <td>{{ expense.category }}</td>
+        <td>{{ expense.description }}</td>
+        <td>{{ expense.expenseDate | date }}</td>
+        <td>{{ expense.isApproved ? 'Approved' : 'Pending' }}</td>
+        <td>
+          <button 
+            *ngIf="!expense.isApproved" 
+            (click)="approveExpense(expense.id)"
+            class="approve-btn">
+            Approve
+          </button>
+          <button 
+            *ngIf="!expense.isApproved"
+            (click)="unapproveExpense(expense.id)"
+            class="unapprove-btn">
+            Unapprove
+          </button>
+          <button 
+            *ngIf="expense.isApproved"
+            (click)="deleteExpense(expense.id)"
+            class="delete-btn">
+            Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #noExpenses>
+    <p>No {{ showApproved ? 'approved' : 'pending' }} expenses found.</p>
+  </ng-template>
+</div>

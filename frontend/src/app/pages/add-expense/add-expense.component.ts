@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './add-expense.component.html',
+  styleUrls: ['./add-expense.component.css']
 })
 export class AddExpenseComponent {
   amount: number = 0;

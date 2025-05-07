@@ -1,33 +1,43 @@
-<h2>Your Expenses</h2>
-<button (click)="goToAddExpense()" style="margin-bottom: 20px;">Add New Expense</button>
+<div class="expenses">
+  <h2>Your Expenses</h2>
+  <button class="add-btn" (click)="goToAddExpense()">Add New Expense</button>
 
+  <table *ngIf="expenses.length > 0; else noExpenses">
+    <thead>
+      <tr>
+        <th>Amount</th>
+        <th>Category</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th>Approved</th>
+        <th>Actions</th> 
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let expense of expenses">
+        <td>{{ expense.amount | currency:'DKK':'symbol' }}</td>
+        <td>{{ expense.category }}</td>
+        <td>{{ expense.description }}</td>
+        <td>{{ expense.expenseDate | date }}</td>
+        <td>{{ expense.isApproved ? '✅' : '❌' }}</td>
+        <td>
+          <button 
+            *ngIf="expense.id !== undefined" 
+            (click)="deleteExpense(expense.id)"
+            class="action-btn delete-btn">
+            Delete
+          </button>
+          <button 
+            (click)="editExpense(expense)"
+            class="action-btn edit-btn">
+            Edit
+          </button>
+        </td> 
+      </tr>
+    </tbody>
+  </table>
 
-<table *ngIf="expenses.length > 0; else noExpenses">
-  <thead>
-    <tr>
-      <th>Amount</th>
-      <th>Category</th>
-      <th>Description</th>
-      <th>Date</th>
-      <th>Approved</th>
-      <th>Actions</th> 
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let expense of expenses">
-      <td>{{ expense.amount | currency:'DKK':'symbol' }}</td>
-      <td>{{ expense.category }}</td>
-      <td>{{ expense.description }}</td>
-      <td>{{ expense.expenseDate | date }}</td>
-      <td>{{ expense.isApproved ? '✅' : '❌' }}</td>
-      <td>
-        <button *ngIf="expense.id !== undefined" (click)="deleteExpense(expense.id)">Delete</button>
-        <button (click)="editExpense(expense)">Edit</button>
-    </td> 
-    </tr>
-  </tbody>
-</table>
-
-<ng-template #noExpenses>
-  <p>No expenses found. Add one!</p>
-</ng-template>
+  <ng-template #noExpenses>
+    <p class="no-expenses">No expenses found. Add one!</p>
+  </ng-template>
+</div>
