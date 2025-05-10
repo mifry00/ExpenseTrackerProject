@@ -11,8 +11,8 @@ namespace ExpenseTracker.API.Tests;
 [TestClass]
 public class ExpenseControllerTests
 {
-    private Mock<IExpenseRepository> _mockExpenseRepository;
-    private ExpenseController _controller;
+    private Mock<IExpenseRepository> _mockExpenseRepository = null!;
+    private ExpenseController _controller = null!;
 
     [TestInitialize]
     public void Setup()
@@ -55,7 +55,8 @@ public class ExpenseControllerTests
         // Verify that the list of expenses was returned
         Assert.IsInstanceOfType(result, typeof(OkObjectResult));
         var okResult = (OkObjectResult)result;
-        var returnedExpenses = (List<Expense>)okResult.Value;
+        var returnedExpenses = (List<Expense>?)okResult.Value;
+        Assert.IsNotNull(returnedExpenses);
 
         // Verify that the number of expenses is correct
         Assert.AreEqual(expenses.Count, returnedExpenses.Count);
