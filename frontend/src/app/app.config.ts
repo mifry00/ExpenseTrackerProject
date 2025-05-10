@@ -4,18 +4,17 @@ import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors, HttpInterceptorFn, HttpRequest, HttpHandlerFn } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
+// Simple header-based authentication (matches backend)
 const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn) => {
-  const authEmail = 'admin@expense.com';
-  const authPassword = 'password';
-  const credentials = btoa(`${authEmail}:${authPassword}`);
+  const authSecret = 'password'; // This must match what your backend checks for
   const authRequest = req.clone({
     setHeaders: {
-      'Authorization': `Basic ${credentials}`
+      'X-My-Request-Header': authSecret
     }
   });
   return next(authRequest);
 };
-
+// Add the interceptor to the HTTP client
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
