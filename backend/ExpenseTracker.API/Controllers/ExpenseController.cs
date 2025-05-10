@@ -8,14 +8,16 @@ namespace ExpenseTracker.API.Controllers;
 [Route("api/[controller]")]
 public class ExpenseController : ControllerBase
 {
-    private readonly ExpenseRepository _expenseRepository;
+    private readonly IExpenseRepository _expenseRepository;
 
-    public ExpenseController(ExpenseRepository expenseRepository)
+    // Constructor injection of ExpenseRepository
+    public ExpenseController(IExpenseRepository expenseRepository)
     {
         _expenseRepository = expenseRepository;
     }
 
     // POST: api/expense/add
+    // HTTP request received from frontend to add a new expense
     [HttpPost("add")]
     public IActionResult AddExpense([FromBody] Expense expense)
     {
@@ -29,6 +31,7 @@ public class ExpenseController : ControllerBase
     }
 
     // GET: api/expense/user/{userId}
+    // HTTP request received from frontend to get all expenses for a user
     [HttpGet("user/{userId}")]
     public IActionResult GetExpensesByUserId(int userId)
     {
@@ -37,7 +40,7 @@ public class ExpenseController : ControllerBase
             var expenses = _expenseRepository.GetExpensesByUserId(userId);
             return Ok(expenses);
         }
-        catch (Exception ex) /* Handle database or repository errors */
+        catch (Exception ex) // Handle database or repository errors 
         {
             Console.WriteLine("Error fetching expenses: " + ex.Message);
             return StatusCode(500, "Server error: " + ex.Message);
@@ -45,6 +48,7 @@ public class ExpenseController : ControllerBase
     }
 
     // DELETE: api/expense/{expenseId}
+    // HTTP request received from frontend to delete an expense
     [HttpDelete("{expenseId}")]
     public IActionResult DeleteExpense(int expenseId)
     {
@@ -53,6 +57,7 @@ public class ExpenseController : ControllerBase
     }
 
     // GET: api/expense/{expenseId}
+    // HTTP request received from frontend to get an expense by ID
     [HttpGet("{expenseId}")]
     public IActionResult GetExpenseById(int expenseId)
     {
@@ -64,7 +69,8 @@ public class ExpenseController : ControllerBase
     }
 
 
-    // PUT: api/expense/{expenseId}
+    // PUT: api/expense/update
+    // HTTP request received from frontend to update an expense
     [HttpPut("update")]
     public IActionResult UpdateExpense([FromBody] Expense updatedExpense)
     {
@@ -76,35 +82,63 @@ public class ExpenseController : ControllerBase
     }
 
     // GET: api/expense/unapproved
+    // HTTP request received from frontend to get all unapproved expenses for admin
     [HttpGet("unapproved")]
     public IActionResult GetUnapprovedExpenses()
     {
-        var expenses = _expenseRepository.GetUnapprovedExpenses();
-        return Ok(expenses);
+        try
+        {
+            var expenses = _expenseRepository.GetUnapprovedExpenses();
+            return Ok(expenses);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching unapproved expenses: {ex.Message}");
+            return StatusCode(500, $"Server error: {ex.Message}");
+        }
     }
 
-    // POST: approve expenses
+    // POST: api/expense/approve/{id}
+    // HTTP request received from frontend to approve an expense for admin
     [HttpPost("approve/{id}")]
     public IActionResult ApproveExpense(int id)
     {
-        _expenseRepository.ApproveExpense(id);
-        return Ok(new { message = "Expense approved successfully." });
+        try
+        {
+            _expenseRepository.ApproveExpense(id);
+            return Ok(new { message = "Expense approved successfully." });
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error approving expense: {ex.Message}");
+            return StatusCode(500, $"Server error: {ex.Message}");
+        }
     }
 
     // GET: api/expense/approved
+    // HTTP request received from frontend to get all approved expenses for admin
     [HttpGet("approved")]
     public IActionResult GetApprovedExpenses()
     {
-        var expenses = _expenseRepository.GetApprovedExpenses();
-        Console.WriteLine($"Retrieved {expenses.Count} approved expenses");
-        foreach (var expense in expenses)
+        try
         {
-            Console.WriteLine($"Expense {expense.Id}: isApproved = {expense.IsApproved}");
+            var expenses = _expenseRepository.GetApprovedExpenses();
+            Console.WriteLine($"Retrieved {expenses.Count} approved expenses");
+            foreach (var expense in expenses)
+            {
+                Console.WriteLine($"Expense {expense.Id}: isApproved = {expense.IsApproved}");
+            }
+            return Ok(expenses);
         }
-        return Ok(expenses);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error fetching approved expenses: {ex.Message}");
+            return StatusCode(500, $"Server error: {ex.Message}");
+        }
     }
 
     // POST: api/expense/unapprove/{id}
+    // HTTP request received from frontend to unapprove/delete an expense for admin
     [HttpPost("unapprove/{id}")]
     public IActionResult UnapproveExpense(int id)
     {

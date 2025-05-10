@@ -4,16 +4,17 @@ using Npgsql;
 
 namespace ExpenseTracker.Model.Repositories;
 
-public class ExpenseRepository : BaseRepository
+// Handles database operations for expenses
+public class ExpenseRepository : BaseRepository, IExpenseRepository
 {
     public ExpenseRepository(IConfiguration configuration) : base(configuration) { }
 
+    // Creates new expense (defaults to unapproved)
     public void AddExpense(Expense expense)
     {
-        using var conn = GetConnection();
         using var cmd = new NpgsqlCommand(@"
             INSERT INTO expenses (user_id, amount, category, description, expense_date, created_at, is_approved)
-            VALUES (@userId, @amount, @category, @description, @expenseDate, @createdAt, @isApproved)", conn);
+            VALUES (@userId, @amount, @category, @description, @expenseDate, @createdAt, @isApproved)");
 
         cmd.Parameters.AddWithValue("userId", expense.UserId);
         cmd.Parameters.AddWithValue("amount", expense.Amount);
@@ -23,23 +24,20 @@ public class ExpenseRepository : BaseRepository
         cmd.Parameters.AddWithValue("description", expense.Description ?? "");
         cmd.Parameters.AddWithValue("isApproved", false); // Set default value to false
 
-        conn.Open();
-        cmd.ExecuteNonQuery();
+        ExecuteNonQuery(cmd);
     }
 
-    // Get all  expenses by user
+    // Gets all expenses for a specific user
     public List<Expense> GetExpensesByUserId(int userId)
     {
         var expenses = new List<Expense>();
-        using var conn = GetConnection();
         using var cmd = new NpgsqlCommand(@"
-    SELECT id, user_id, amount, category, expense_date, is_approved, created_at, description 
-    FROM expenses 
-    WHERE user_id = @userId", conn);   
+            SELECT id, user_id, amount, category, expense_date, is_approved, created_at, description 
+            FROM expenses 
+            WHERE user_id = @userId");   
         cmd.Parameters.AddWithValue("userId", userId);
 
-        conn.Open();
-        using var reader = cmd.ExecuteReader();
+        using var reader = ExecuteReader(cmd);
         while (reader.Read())
         {
             expenses.Add(new Expense
@@ -58,59 +56,59 @@ public class ExpenseRepository : BaseRepository
         return expenses;
     }
 
-    // Get all unapproved expenses (for admin)
+    // Gets all expenses pending admin approval
     public List<Expense> GetUnapprovedExpenses()
     {
         var expenses = new List<Expense>();
-        using var conn = GetConnection();
         using var cmd = new NpgsqlCommand(@"
-        SELECT id, user_id, amount, category, expense_date, is_approved, created_at, description 
-        FROM expenses 
-        WHERE is_approved = false", conn);
+            SELECT id, user_id, amount, category, expense_date, is_approved, created_at, description 
+            FROM expenses 
+            WHERE is_approved = false");
 
-        conn.Open();
-        using var reader = cmd.ExecuteReader();
-        while (reader.Read())
+        try
         {
-            expenses.Add(new Expense
+            using var reader = ExecuteReader(cmd);
+            while (reader.Read())
             {
-                Id = reader.GetInt32(0),
-                UserId = reader.GetInt32(1),
-                Amount = reader.GetDecimal(2),
-                Category = reader.GetString(3),
-                ExpenseDate = reader.GetDateTime(4),
-                IsApproved = reader.GetBoolean(5),
-                CreatedAt = reader.GetDateTime(6),
-                Description = reader.GetString(7)
-            });
+                expenses.Add(new Expense
+                {
+                    Id = reader.GetInt32(0),
+                    UserId = reader.GetInt32(1),
+                    Amount = reader.GetDecimal(2),
+                    Category = reader.GetString(3),
+                    ExpenseDate = reader.GetDateTime(4),
+                    IsApproved = reader.GetBoolean(5),
+                    CreatedAt = reader.GetDateTime(6),
+                    Description = reader.GetString(7)
+                });
+            }
+            return expenses;
         }
-
-        return expenses;
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Database error in GetUnapprovedExpenses: {ex.Message}");
+            throw;
+        }
     }
 
-    // Delete a specific expense
+    // Deletes expense from database
     public void DeleteExpense(int id)
     {
-        using var conn = GetConnection();
-        using var cmd = new NpgsqlCommand("DELETE FROM expenses WHERE id = @id", conn);
+        using var cmd = new NpgsqlCommand("DELETE FROM expenses WHERE id = @id");
         cmd.Parameters.AddWithValue("id", id);
-
-        conn.Open();
-        cmd.ExecuteNonQuery();
+        ExecuteNonQuery(cmd);
     }
 
+    // Gets single expense by ID
     public Expense GetExpenseById(int expenseId)
     {
-        using var conn = GetConnection();
         using var cmd = new NpgsqlCommand(@"
-        SELECT id, user_id, amount, category, expense_date, is_approved, created_at, description 
-        FROM expenses 
-        WHERE id = @id", conn);
-
+            SELECT id, user_id, amount, category, expense_date, is_approved, created_at, description 
+            FROM expenses 
+            WHERE id = @id");
         cmd.Parameters.AddWithValue("id", expenseId);
 
-        conn.Open();
-        using var reader = cmd.ExecuteReader();
+        using var reader = ExecuteReader(cmd);
         if (reader.Read())
         {
             return new Expense
@@ -129,16 +127,13 @@ public class ExpenseRepository : BaseRepository
         return null!;
     }
 
-    
-
-    // Edit/update a specific expense
+    // Updates existing expense details
     public void UpdateExpense(Expense expense)
     {
-        using var conn = GetConnection();
         using var cmd = new NpgsqlCommand(@"
-        UPDATE expenses 
-        SET amount = @amount, category = @category, description = @description, expense_date = @expenseDate 
-        WHERE id = @id", conn);
+            UPDATE expenses 
+            SET amount = @amount, category = @category, description = @description, expense_date = @expenseDate 
+            WHERE id = @id");
 
         cmd.Parameters.AddWithValue("amount", expense.Amount);
         cmd.Parameters.AddWithValue("category", expense.Category);
@@ -146,59 +141,57 @@ public class ExpenseRepository : BaseRepository
         cmd.Parameters.AddWithValue("expenseDate", expense.ExpenseDate);
         cmd.Parameters.AddWithValue("id", expense.Id);
 
-        conn.Open();
-        cmd.ExecuteNonQuery();
+        ExecuteNonQuery(cmd);
     }
 
-    // Approve a specific expense
+    // Marks expense as approved by admin
     public void ApproveExpense(int id)
     {
-        using var conn = GetConnection();
-        using var cmd = new NpgsqlCommand("UPDATE expenses SET is_approved = true WHERE id = @id", conn);
+        using var cmd = new NpgsqlCommand("UPDATE expenses SET is_approved = true WHERE id = @id");
         cmd.Parameters.AddWithValue("id", id);
-
-        conn.Open();
-        cmd.ExecuteNonQuery();
+        ExecuteNonQuery(cmd);
     }
 
-    // Get all approved expenses (for admin)
+    // Gets all approved expenses
     public List<Expense> GetApprovedExpenses()
     {
         var expenses = new List<Expense>();
-        using var conn = GetConnection();
         using var cmd = new NpgsqlCommand(@"
             SELECT id, user_id, amount, category, expense_date, is_approved, created_at, description 
             FROM expenses 
-            WHERE is_approved = true", conn);
+            WHERE is_approved = true");
 
-        conn.Open();
-        using var reader = cmd.ExecuteReader();
-        while (reader.Read())
+        try
         {
-            expenses.Add(new Expense
+            using var reader = ExecuteReader(cmd);
+            while (reader.Read())
             {
-                Id = reader.GetInt32(0),
-                UserId = reader.GetInt32(1),
-                Amount = reader.GetDecimal(2),
-                Category = reader.GetString(3),
-                ExpenseDate = reader.GetDateTime(4),
-                IsApproved = reader.GetBoolean(5),
-                CreatedAt = reader.GetDateTime(6),
-                Description = reader.GetString(7)
-            });
+                expenses.Add(new Expense
+                {
+                    Id = reader.GetInt32(0),
+                    UserId = reader.GetInt32(1),
+                    Amount = reader.GetDecimal(2),
+                    Category = reader.GetString(3),
+                    ExpenseDate = reader.GetDateTime(4),
+                    IsApproved = reader.GetBoolean(5),
+                    CreatedAt = reader.GetDateTime(6),
+                    Description = reader.GetString(7)
+                });
+            }
+            return expenses;
         }
-
-        return expenses;
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Database error in GetApprovedExpenses: {ex.Message}");
+            throw;
+        }
     }
 
-    // Unapprove a specific expense
+    // Reverts expense approval status
     public void UnapproveExpense(int id)
     {
-        using var conn = GetConnection();
-        using var cmd = new NpgsqlCommand("UPDATE expenses SET is_approved = false WHERE id = @id", conn);
+        using var cmd = new NpgsqlCommand("UPDATE expenses SET is_approved = false WHERE id = @id");
         cmd.Parameters.AddWithValue("id", id);
-
-        conn.Open();
-        cmd.ExecuteNonQuery();
+        ExecuteNonQuery(cmd);
     }
 }

@@ -16,21 +16,30 @@ export class ExpensesComponent implements OnInit {
   constructor(private expenseService: ExpenseService, private router: Router) {}
 
   ngOnInit() {
+    console.log('ExpensesComponent initialized');
     this.loadExpenses();
   }
 
   loadExpenses() {
     const userId = Number(localStorage.getItem('userId'));
-    if (userId) {
-      this.expenseService.getExpenses(userId).subscribe({
-        next: (data) => {
-          this.expenses = data;
-        },
-        error: (err) => {
-          console.error('Failed to fetch expenses', err);
-        }
-      });
+    console.log('Loading expenses for userId:', userId);
+    
+    if (!userId) {
+      console.error('No user ID found');
+      this.router.navigate(['/']); // Redirect to login if no userId
+      return;
     }
+
+    console.log('Making API call to get expenses...');
+    this.expenseService.getExpenses(userId).subscribe({
+      next: (data) => {
+        console.log('Received expenses:', data);
+        this.expenses = data;
+      },
+      error: (err) => {
+        console.error('Failed to fetch expenses:', err);
+      }
+    });
   }
 
   deleteExpense(expenseId: number) {

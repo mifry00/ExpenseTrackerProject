@@ -4,10 +4,11 @@ using Npgsql;
 
 namespace ExpenseTracker.Model.Repositories;
 
-public class UserRepository : BaseRepository
+public class UserRepository : BaseRepository // Inherits from BaseRepository
 {
     public UserRepository(IConfiguration configuration) : base(configuration) { }
 
+    // Retrieves a user by email
     public User? GetUserByEmail(string email)
     {
         using var conn = GetConnection();
@@ -32,6 +33,7 @@ public class UserRepository : BaseRepository
         return null;
     }
 
+    // Inserts a new user into the database
     public void InsertUser(User user)
     {
         using var conn = GetConnection();

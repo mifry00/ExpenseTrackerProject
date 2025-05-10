@@ -7,6 +7,7 @@ public class BaseRepository
 {
     protected readonly string ConnectionString;
 
+    // Constructor injection of IConfiguration
     public BaseRepository(IConfiguration configuration)
     {
         ConnectionString = configuration.GetConnectionString("AppProgDb")!;

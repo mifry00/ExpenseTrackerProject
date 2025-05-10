@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./landing.component.css']
 })
 export class LandingComponent {
-  isLoginMode: boolean = true; // login or register view
+  isLoginMode: boolean = true; 
 
   email: string = '';
   password: string = '';

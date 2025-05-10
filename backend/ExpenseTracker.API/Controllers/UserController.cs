@@ -16,6 +16,7 @@ public class UserController : ControllerBase
     }
 
     // POST: api/user/register
+    // HTTP request received from frontend to register a new user
     [HttpPost("register")]
     public IActionResult Register([FromBody] User user)
     {
@@ -34,6 +35,7 @@ public class UserController : ControllerBase
     }
 
     // POST: api/user/login
+    // HTTP request received from frontend to login a user
     [HttpPost("login")]
     public IActionResult Login([FromBody] User loginUser)
     {

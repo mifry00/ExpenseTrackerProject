@@ -1,6 +1,7 @@
 using ExpenseTracker.Model.Repositories; 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
+using ExpenseTracker.API.Middleware;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -12,8 +13,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Register repositories
+builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
 builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<ExpenseRepository>();
 
 // Configure CORS properly
 builder.Services.AddCors(options =>
@@ -40,7 +41,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // Middleware
-// app.UseHttpsRedirection(); // optional
+app.UseBasicAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.MapGet("/", () => "Expense Tracker API is running!");
